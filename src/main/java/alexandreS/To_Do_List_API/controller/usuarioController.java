@@ -1,6 +1,7 @@
 package alexandreS.To_Do_List_API.controller;
 
 
+import alexandreS.To_Do_List_API.DTO.usuarioDTO;
 import alexandreS.To_Do_List_API.entitys.usuarioEntity;
 import alexandreS.To_Do_List_API.service.usuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class usuarioController {
     private  usuarioService service;
 
     @PostMapping()
-    public  ResponseEntity<usuarioEntity>saveUsuario( @RequestBody usuarioEntity usuario){
+    public ResponseEntity<usuarioDTO> saveUsuario(@RequestBody usuarioEntity usuario){
         return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
     @GetMapping("/all")

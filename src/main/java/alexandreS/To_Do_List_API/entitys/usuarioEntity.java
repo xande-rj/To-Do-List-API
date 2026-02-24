@@ -1,11 +1,10 @@
 package alexandreS.To_Do_List_API.entitys;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,7 +22,7 @@ public class usuarioEntity {
     private String senhaUsuario;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private ArrayList<todoListEntity> todoList = new ArrayList<>();
+    private List<todoListEntity> todoList= new ArrayList<>() ;
 
 
 }
