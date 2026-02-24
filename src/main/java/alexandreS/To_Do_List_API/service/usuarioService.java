@@ -13,12 +13,17 @@ public class usuarioService {
     @Autowired
     private usuarioRepository repository;
 
+    //Manter
     public usuarioDTO saveUsuario(usuarioEntity usuario){
+        if(repository.existsByEmailUsuario(usuario.getEmailUsuario())){
+            throw new RuntimeException("Usuário já existe");
+        }
           usuarioEntity user =repository.save(usuario);
-          usuarioDTO userDTO = new usuarioDTO(user.getEmailUsuario(),user.getNomeUsuario());
-          return  userDTO;
+
+          return  new usuarioDTO(user.getEmailUsuario(),user.getNomeUsuario(),user.getTodoList());
     }
 
+    //dev
     public List<usuarioEntity> listAll(){
         return  repository.findAll();
     }

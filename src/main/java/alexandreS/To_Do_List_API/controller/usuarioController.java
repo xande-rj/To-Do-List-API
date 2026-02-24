@@ -16,14 +16,14 @@ import java.util.List;
 public class usuarioController {
     @Autowired
     private  usuarioService service;
-
+//manter
     @PostMapping()
     public ResponseEntity<usuarioDTO> saveUsuario(@RequestBody usuarioEntity usuario){
         return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
+    //dev
     @GetMapping("/all")
     public ResponseEntity<List<usuarioEntity>> findAll(){
-
         return  new ResponseEntity<>(service.listAll(),HttpStatus.OK);
     }
 
