@@ -6,10 +6,7 @@ import alexandreS.To_Do_List_API.service.usuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,9 +16,9 @@ public class usuarioController {
     @Autowired
     private  usuarioService service;
 
-    @PostMapping("")
-    public  usuarioEntity saveUsuario(usuarioEntity usuario){
-        return  service.saveUsuario(usuario);
+    @PostMapping()
+    public  ResponseEntity<usuarioEntity>saveUsuario( @RequestBody usuarioEntity usuario){
+        return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
     @GetMapping("/all")
     public ResponseEntity<List<usuarioEntity>> findAll(){
