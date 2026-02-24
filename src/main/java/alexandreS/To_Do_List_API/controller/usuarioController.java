@@ -18,7 +18,7 @@ public class usuarioController {
     private  usuarioService service;
 //manter
     @PostMapping()
-    public ResponseEntity<usuarioDTO> saveUsuario(@RequestBody usuarioEntity usuario){
+    public ResponseEntity<String> saveUsuario(@RequestBody usuarioDTO usuario){
         return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
     //dev

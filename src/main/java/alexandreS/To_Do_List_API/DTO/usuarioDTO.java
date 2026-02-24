@@ -14,5 +14,6 @@ import java.util.List;
 public class usuarioDTO {
     private  String emailUsuario;
     private String nomeUsuario;
+    private String senhaUsuario;
     private List<todoListEntity> todoList= new ArrayList<>() ;
 }

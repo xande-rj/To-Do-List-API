@@ -4,6 +4,8 @@ import alexandreS.To_Do_List_API.DTO.usuarioDTO;
 import alexandreS.To_Do_List_API.entitys.usuarioEntity;
 import alexandreS.To_Do_List_API.repository.usuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.SpringVersion;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,14 +15,29 @@ public class usuarioService {
     @Autowired
     private usuarioRepository repository;
 
+    private final PasswordEncoder passwordEncoder;
+
+    public  usuarioService(PasswordEncoder passwordEncoder){
+        this.passwordEncoder = passwordEncoder;
+    }
+
     //Manter
-    public usuarioDTO saveUsuario(usuarioEntity usuario){
+    public String saveUsuario(usuarioDTO usuario){
         if(repository.existsByEmailUsuario(usuario.getEmailUsuario())){
             throw new RuntimeException("Usuário já existe");
         }
-          usuarioEntity user =repository.save(usuario);
 
-          return  new usuarioDTO(user.getEmailUsuario(),user.getNomeUsuario(),user.getTodoList());
+
+          usuarioEntity usuarioDb = new usuarioEntity();
+            usuarioDb.setEmailUsuario(usuario.getEmailUsuario());
+            usuarioDb.setNomeUsuario(usuario.getNomeUsuario());
+            usuarioDb.setTodoList(usuario.getTodoList());
+            String encryptedPassword = passwordEncoder.encode(usuario.getSenhaUsuario());
+            usuarioDb.setSenhaUsuario(encryptedPassword);
+
+            repository.save(usuarioDb);
+
+          return  "";
     }
 
     //dev
