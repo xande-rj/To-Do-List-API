@@ -1,4 +1,4 @@
-package alexandreS.To_Do_List_API.repositories;
+package alexandreS.To_Do_List_API.entitys;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class usuarioRepositories {
+public class usuarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUsuario;
