@@ -14,12 +14,10 @@ import java.util.ArrayList;
 @Entity
 public class usuarioEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUsuario;
+    private  String emailUsuario;
 
     private String nomeUsuario;
     private String senhaUsuario;
-
     private ArrayList<Integer> todoListId;
 
 
