@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class todoListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idTodo;
+    private Long id;
 
     private String titulo;
     private String descricao;
@@ -23,4 +23,7 @@ public class todoListEntity {
     @Enumerated(EnumType.STRING)
     private StatusTodo status;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+        private usuarioEntity usuario;
 }

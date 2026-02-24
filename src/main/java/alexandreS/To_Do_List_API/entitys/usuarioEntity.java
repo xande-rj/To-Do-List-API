@@ -21,7 +21,9 @@ public class usuarioEntity {
 
     private String nomeUsuario;
     private String senhaUsuario;
-    private ArrayList<Integer> todoListId;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private ArrayList<todoListEntity> todoList = new ArrayList<>();
 
 
 }
