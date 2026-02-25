@@ -42,7 +42,7 @@ public class usuarioService {
             usuarioDb.setSenhaUsuario(encryptedPassword);
 
             usuarioEntity usario = repository.save(usuarioDb);
-        return jwtService.gerarToken(usario.getId(),usario.getEmailUsuario(),usario.getNomeUsuario());
+        return jwtService.gerarToken(usario.getId());
     }
 
     public String loginUsuario(usuarioLoginDTO usuario) {
@@ -60,7 +60,7 @@ public class usuarioService {
                     HttpStatus.NOT_ACCEPTABLE
             );
         }
-        return jwtService.gerarToken(usariodb.getId(),usariodb.getEmailUsuario(),usariodb.getNomeUsuario());
+        return jwtService.gerarToken(usariodb.getId());
 
 
 
