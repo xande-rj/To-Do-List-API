@@ -3,8 +3,10 @@ package alexandreS.To_Do_List_API.service;
 import alexandreS.To_Do_List_API.DTO.usuarioCadastroDTO;
 import alexandreS.To_Do_List_API.DTO.usuarioLoginDTO;
 import alexandreS.To_Do_List_API.entitys.usuarioEntity;
+import alexandreS.To_Do_List_API.errors.applicationException;
 import alexandreS.To_Do_List_API.repository.usuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,11 @@ public class usuarioService {
     //Manter
     public String saveUsuario(usuarioCadastroDTO usuario){
         if(repository.existsByEmailUsuario(usuario.getEmailUsuario())){
-            throw new RuntimeException("Usuário já existe");
+            throw new applicationException(
+                    "Email ja cadastrado",
+                    HttpStatus.BAD_REQUEST
+            );
+
         }
           usuarioEntity usuarioDb = new usuarioEntity();
             usuarioDb.setEmailUsuario(usuario.getEmailUsuario());
@@ -41,12 +47,18 @@ public class usuarioService {
 
     public String loginUsuario(usuarioLoginDTO usuario) {
         if(!repository.existsByEmailUsuario(usuario.getEmailUsuario())){
-            throw new RuntimeException("Usuário nao cadastrado");
+            throw new applicationException(
+                    "Email não cadastrado",
+                    HttpStatus.NOT_FOUND
+            );
         }
         usuarioEntity usariodb= repository.findByEmailUsuario(usuario.getEmailUsuario()).get();
 
         if(!passwordEncoder.matches(usuario.getSenhaUsuario(),usariodb.getSenhaUsuario())){
-            throw new RuntimeException("Senha incorreta");
+            throw new applicationException(
+                    "Senha incorreta",
+                    HttpStatus.NOT_ACCEPTABLE
+            );
         }
         return jwtService.gerarToken(usariodb.getId(),usariodb.getEmailUsuario(),usariodb.getNomeUsuario());
 

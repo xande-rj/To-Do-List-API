@@ -23,7 +23,7 @@ public class usuarioController {
         return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
     @PostMapping("/login")
-    public  ResponseEntity<String> loginUsuario(@RequestBody usuarioLoginDTO usuario){
+    public  ResponseEntity<?> loginUsuario(@RequestBody usuarioLoginDTO usuario){
         return new ResponseEntity<>(service.loginUsuario(usuario),HttpStatus.OK);
     }
     //dev
