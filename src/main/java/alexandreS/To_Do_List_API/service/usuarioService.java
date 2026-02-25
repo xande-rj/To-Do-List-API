@@ -4,7 +4,6 @@ import alexandreS.To_Do_List_API.DTO.usuarioDTO;
 import alexandreS.To_Do_List_API.entitys.usuarioEntity;
 import alexandreS.To_Do_List_API.repository.usuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.SpringVersion;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +15,11 @@ public class usuarioService {
     private usuarioRepository repository;
 
     private final PasswordEncoder passwordEncoder;
+    private final jwtService jwtService;
 
-    public  usuarioService(PasswordEncoder passwordEncoder){
+    public  usuarioService(PasswordEncoder passwordEncoder,jwtService jwtService ){
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     //Manter
@@ -35,9 +36,8 @@ public class usuarioService {
             String encryptedPassword = passwordEncoder.encode(usuario.getSenhaUsuario());
             usuarioDb.setSenhaUsuario(encryptedPassword);
 
-            repository.save(usuarioDb);
-
-          return  "";
+            usuarioEntity usario = repository.save(usuarioDb);
+        return jwtService.gerarToken(usario.getId(),usario.getEmailUsuario(),usario.getNomeUsuario());
     }
 
     //dev

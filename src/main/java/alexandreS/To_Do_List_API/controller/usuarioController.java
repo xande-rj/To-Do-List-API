@@ -21,6 +21,7 @@ public class usuarioController {
     public ResponseEntity<String> saveUsuario(@RequestBody usuarioDTO usuario){
         return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
+
     //dev
     @GetMapping("/all")
     public ResponseEntity<List<usuarioEntity>> findAll(){
