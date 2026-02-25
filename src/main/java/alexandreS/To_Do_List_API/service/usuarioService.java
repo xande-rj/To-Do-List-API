@@ -1,6 +1,6 @@
 package alexandreS.To_Do_List_API.service;
 
-import alexandreS.To_Do_List_API.DTO.usuarioDTO;
+import alexandreS.To_Do_List_API.DTO.usuarioCadastroDTO;
 import alexandreS.To_Do_List_API.entitys.usuarioEntity;
 import alexandreS.To_Do_List_API.repository.usuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class usuarioService {
     }
 
     //Manter
-    public String saveUsuario(usuarioDTO usuario){
+    public String saveUsuario(usuarioCadastroDTO usuario){
         if(repository.existsByEmailUsuario(usuario.getEmailUsuario())){
             throw new RuntimeException("Usuário já existe");
         }

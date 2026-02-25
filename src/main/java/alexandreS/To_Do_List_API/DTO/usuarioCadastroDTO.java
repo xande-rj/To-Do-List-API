@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class usuarioDTO {
+public class usuarioCadastroDTO {
     private  String emailUsuario;
     private String nomeUsuario;
     private String senhaUsuario;

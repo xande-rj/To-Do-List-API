@@ -1,7 +1,7 @@
 package alexandreS.To_Do_List_API.controller;
 
 
-import alexandreS.To_Do_List_API.DTO.usuarioDTO;
+import alexandreS.To_Do_List_API.DTO.usuarioCadastroDTO;
 import alexandreS.To_Do_List_API.entitys.usuarioEntity;
 import alexandreS.To_Do_List_API.service.usuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,9 @@ public class usuarioController {
     private  usuarioService service;
 //manter
     @PostMapping()
-    public ResponseEntity<String> saveUsuario(@RequestBody usuarioDTO usuario){
+    public ResponseEntity<String> saveUsuario(@RequestBody usuarioCadastroDTO usuario){
         return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
-
     //dev
     @GetMapping("/all")
     public ResponseEntity<List<usuarioEntity>> findAll(){
