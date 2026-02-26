@@ -3,6 +3,7 @@ package alexandreS.To_Do_List_API.controller;
 import alexandreS.To_Do_List_API.DTO.todoDTO;
 import alexandreS.To_Do_List_API.entitys.todoListEntity;
 import alexandreS.To_Do_List_API.service.todoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class todoController {
     private todoService service;
 
     @PostMapping("/save")
-    public ResponseEntity<todoDTO> save(@RequestBody todoDTO todo, Authentication authentication){
+    public ResponseEntity<todoDTO> save(@RequestBody @Valid todoDTO todo, Authentication authentication){
         todoListEntity entity = service.saveList(todo,authentication);
 
         return new ResponseEntity<>(new todoDTO(

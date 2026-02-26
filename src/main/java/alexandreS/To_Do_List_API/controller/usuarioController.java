@@ -3,8 +3,8 @@ package alexandreS.To_Do_List_API.controller;
 
 import alexandreS.To_Do_List_API.DTO.usuarioCadastroDTO;
 import alexandreS.To_Do_List_API.DTO.usuarioLoginDTO;
-import alexandreS.To_Do_List_API.entitys.usuarioEntity;
 import alexandreS.To_Do_List_API.service.usuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class usuarioController {
         return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
     @PostMapping("/login")
-    public  ResponseEntity<String> loginUsuario(@RequestBody usuarioLoginDTO usuario){
+    public  ResponseEntity<String> loginUsuario(@RequestBody @Valid usuarioLoginDTO usuario){
         return new ResponseEntity<>(service.loginUsuario(usuario),HttpStatus.OK);
     }
 
