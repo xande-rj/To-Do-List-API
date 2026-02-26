@@ -17,20 +17,16 @@ import java.util.List;
 public class usuarioController {
     @Autowired
     private  usuarioService service;
-//manter
+
     @PostMapping()
     public ResponseEntity<String> saveUsuario(@RequestBody usuarioCadastroDTO usuario){
         return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
     @PostMapping("/login")
-    public  ResponseEntity<?> loginUsuario(@RequestBody usuarioLoginDTO usuario){
+    public  ResponseEntity<String> loginUsuario(@RequestBody usuarioLoginDTO usuario){
         return new ResponseEntity<>(service.loginUsuario(usuario),HttpStatus.OK);
     }
-    //dev
-    @GetMapping("/all")
-    public ResponseEntity<List<usuarioEntity>> findAll(){
-        return  new ResponseEntity<>(service.listAll(),HttpStatus.OK);
-    }
+
 
 
 

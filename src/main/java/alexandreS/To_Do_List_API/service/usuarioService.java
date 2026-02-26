@@ -25,11 +25,11 @@ public class usuarioService {
         this.jwtService = jwtService;
     }
 
-    //Manter
+
     public String saveUsuario(usuarioCadastroDTO usuario){
         if(repository.existsByEmailUsuario(usuario.getEmailUsuario())){
             throw new applicationException(
-                    "Email ja cadastrado",
+                    "Email já cadastrado",
                     HttpStatus.BAD_REQUEST
             );
 
@@ -41,8 +41,8 @@ public class usuarioService {
             String encryptedPassword = passwordEncoder.encode(usuario.getSenhaUsuario());
             usuarioDb.setSenhaUsuario(encryptedPassword);
 
-            usuarioEntity usario = repository.save(usuarioDb);
-        return jwtService.gerarToken(usario.getId());
+            usuarioEntity entity = repository.save(usuarioDb);
+        return jwtService.gerarToken(entity.getId());
     }
 
     public String loginUsuario(usuarioLoginDTO usuario) {
@@ -52,23 +52,17 @@ public class usuarioService {
                     HttpStatus.NOT_FOUND
             );
         }
-        usuarioEntity usariodb= repository.findByEmailUsuario(usuario.getEmailUsuario()).get();
+        usuarioEntity usuariodb= repository.findByEmailUsuario(usuario.getEmailUsuario()).get();
 
-        if(!passwordEncoder.matches(usuario.getSenhaUsuario(),usariodb.getSenhaUsuario())){
+        if(!passwordEncoder.matches(usuario.getSenhaUsuario(),usuariodb.getSenhaUsuario())){
             throw new applicationException(
                     "Senha incorreta",
                     HttpStatus.NOT_ACCEPTABLE
             );
         }
-        return jwtService.gerarToken(usariodb.getId());
-
-
+        return jwtService.gerarToken(usuariodb.getId());
 
     }
 
-    //dev
-    public List<usuarioEntity> listAll(){
-        return  repository.findAll();
-    }
 
 }

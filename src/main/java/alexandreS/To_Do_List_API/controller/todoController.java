@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/todo")
@@ -17,10 +19,10 @@ public class todoController {
     private todoService service;
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody todoDTO todo, Authentication authentication){
+    public ResponseEntity<todoDTO> save(@RequestBody todoDTO todo, Authentication authentication){
         todoListEntity entity = service.saveList(todo,authentication);
 
-        return new ResponseEntity(new todoDTO(
+        return new ResponseEntity<>(new todoDTO(
                 entity.getTitulo(),
                 entity.getDescricao(),
                 entity.getDtaValidade(),
@@ -29,9 +31,8 @@ public class todoController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<todoDTO> getAll(Authentication authentication){
-
- return new ResponseEntity(service.listAll(authentication), HttpStatus.OK);
+    public ResponseEntity<List<todoDTO>> getAll(Authentication authentication){
+    return new ResponseEntity<>(service.listAll(authentication), HttpStatus.OK);
     }
 
 }
