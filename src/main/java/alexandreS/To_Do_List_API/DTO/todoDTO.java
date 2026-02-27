@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class todoDTO {
+    private  Long id;
     @NotNull(message = "A titulo é obrigatória")
     private String titulo;
 
