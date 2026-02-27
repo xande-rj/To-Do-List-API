@@ -24,6 +24,7 @@ public class todoController {
         todoListEntity entity = service.saveList(todo,authentication);
 
         return new ResponseEntity<>(new todoDTO(
+                entity.getId(),
                 entity.getTitulo(),
                 entity.getDescricao(),
                 entity.getDtaValidade(),
@@ -34,6 +35,11 @@ public class todoController {
     @GetMapping("/all")
     public ResponseEntity<List<todoDTO>> getAll(Authentication authentication){
     return new ResponseEntity<>(service.listAll(authentication), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<todoDTO> getById(Authentication authentication,@PathVariable Long id){
+        return new ResponseEntity<>(service.getById(authentication,id), HttpStatus.OK);
     }
 
 }

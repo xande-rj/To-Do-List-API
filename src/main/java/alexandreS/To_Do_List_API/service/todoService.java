@@ -51,9 +51,29 @@ public class todoService {
             );
         }
         return listEntities.stream().map(todo -> new todoDTO(
+                todo.getId(),
                 todo.getTitulo(),
                 todo.getDescricao(),
                 todo.getDtaValidade(),
                 todo.getStatus())).toList();
+    }
+
+    public  todoDTO getById(Authentication authentication,Long id){
+       Optional<todoListEntity>  todoBd = repository.findByIdAndUsuarioId(id,Long.parseLong(authentication.getName()));
+       if(todoBd.isEmpty()){
+           throw new applicationException(
+                   "To-do nao encontrado",
+                   HttpStatus.NOT_FOUND
+           );
+       }
+
+todoListEntity todo = todoBd.get();
+        return new todoDTO(
+                todo.getId(),
+                todo.getTitulo(),
+                todo.getDescricao(),
+                todo.getDtaValidade(),
+                todo.getStatus());
+
     }
 }
