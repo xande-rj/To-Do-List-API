@@ -46,8 +46,29 @@ public class todoService {
 
     public List<todoDTO> listAll(StatusTodo status, LocalDate data, Authentication authentication){
 
+        if(status!=null && data!=null){
+            List<todoListEntity> listEntities = repository.findByUsuarioIdAndStatusAndDtaValidadeLessThanEqual(Long.parseLong(authentication.getName()),status,data);
+            if(listEntities.isEmpty()){
+                throw new applicationException(
+                        "Lista de To-do vazia",
+                        HttpStatus.NOT_FOUND
+                );
+            }
+            return listEntities.stream().map(todo -> new todoDTO(
+                    todo.getId(),
+                    todo.getTitulo(),
+                    todo.getDescricao(),
+                    todo.getDtaValidade(),
+                    todo.getStatus())).toList();
+        }
         if(status !=null){
             List<todoListEntity> listEntities = repository.findByUsuarioIdAndStatus(Long.parseLong(authentication.getName()),status);
+            if(listEntities.isEmpty()){
+                throw new applicationException(
+                        "Lista de To-do vazia",
+                        HttpStatus.NOT_FOUND
+                );
+            }
             return listEntities.stream().map(todo -> new todoDTO(
                     todo.getId(),
                     todo.getTitulo(),
@@ -57,6 +78,12 @@ public class todoService {
         }
         if(data!=null){
             List<todoListEntity> listEntities = repository.findByUsuarioIdAndDtaValidadeLessThanEqualOrderByDtaValidadeAsc(Long.parseLong(authentication.getName()),data);
+            if(listEntities.isEmpty()){
+                throw new applicationException(
+                        "Lista de To-do vazia",
+                        HttpStatus.NOT_FOUND
+                );
+            }
             return listEntities.stream().map(todo -> new todoDTO(
                     todo.getId(),
                     todo.getTitulo(),
@@ -67,7 +94,7 @@ public class todoService {
         List<todoListEntity> listEntities = repository.findByUsuarioId(Long.parseLong(authentication.getName()));
         if(listEntities.isEmpty()){
             throw new applicationException(
-                    "Usuario nao encontrado",
+                    "Lista de To-do vazia",
                     HttpStatus.NOT_FOUND
             );
         }

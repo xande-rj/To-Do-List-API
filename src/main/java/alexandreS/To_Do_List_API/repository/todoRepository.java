@@ -15,5 +15,7 @@ public interface todoRepository extends JpaRepository<todoListEntity,Long> {
 
     List<todoListEntity> findByUsuarioIdAndStatus(Long usuarioId,StatusTodo status);
 
-    List<todoListEntity> findByUsuarioIdAndDtaValidadeLessThanEqualOrderByDtaValidadeAsc(Long usuarioId, LocalDate Date);
+    List<todoListEntity> findByUsuarioIdAndDtaValidadeLessThanEqualOrderByDtaValidadeAsc(Long usuarioId, LocalDate date);
+
+    List<todoListEntity>findByUsuarioIdAndStatusAndDtaValidadeLessThanEqual(Long usuarioId,StatusTodo status, LocalDate date);
 }
