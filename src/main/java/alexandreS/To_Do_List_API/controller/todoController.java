@@ -1,6 +1,7 @@
 package alexandreS.To_Do_List_API.controller;
 
 import alexandreS.To_Do_List_API.DTO.todoDTO;
+import alexandreS.To_Do_List_API.Enus.StatusTodo;
 import alexandreS.To_Do_List_API.entitys.todoListEntity;
 import alexandreS.To_Do_List_API.service.todoService;
 import jakarta.validation.Valid;
@@ -33,8 +34,8 @@ public class todoController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<todoDTO>> getAll(Authentication authentication){
-    return new ResponseEntity<>(service.listAll(authentication), HttpStatus.OK);
+    public ResponseEntity<List<todoDTO>> getAll(@RequestParam(required = false) StatusTodo status, Authentication authentication){
+    return new ResponseEntity<>(service.listAll(status,authentication), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

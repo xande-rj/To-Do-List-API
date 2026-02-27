@@ -1,6 +1,7 @@
 package alexandreS.To_Do_List_API.service;
 
 import alexandreS.To_Do_List_API.DTO.todoDTO;
+import alexandreS.To_Do_List_API.Enus.StatusTodo;
 import alexandreS.To_Do_List_API.entitys.todoListEntity;
 import alexandreS.To_Do_List_API.entitys.usuarioEntity;
 import alexandreS.To_Do_List_API.errors.applicationException;
@@ -41,8 +42,17 @@ public class todoService {
         return repository.save(todoList);
     }
 
-    public List<todoDTO> listAll(Authentication authentication){
+    public List<todoDTO> listAll(StatusTodo status,Authentication authentication){
 
+        if(status !=null){
+            List<todoListEntity> listEntities = repository.findByUsuarioIdAndStatus(Long.parseLong(authentication.getName()),status);
+            return listEntities.stream().map(todo -> new todoDTO(
+                    todo.getId(),
+                    todo.getTitulo(),
+                    todo.getDescricao(),
+                    todo.getDtaValidade(),
+                    todo.getStatus())).toList();
+        }
         List<todoListEntity> listEntities = repository.findByUsuarioId(Long.parseLong(authentication.getName()));
         if(listEntities.isEmpty()){
             throw new applicationException(
@@ -50,6 +60,8 @@ public class todoService {
                     HttpStatus.NOT_FOUND
             );
         }
+
+
         return listEntities.stream().map(todo -> new todoDTO(
                 todo.getId(),
                 todo.getTitulo(),
