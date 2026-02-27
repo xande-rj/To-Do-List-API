@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,10 +44,19 @@ public class todoService {
         return repository.save(todoList);
     }
 
-    public List<todoDTO> listAll(StatusTodo status,Authentication authentication){
+    public List<todoDTO> listAll(StatusTodo status, LocalDate data, Authentication authentication){
 
         if(status !=null){
             List<todoListEntity> listEntities = repository.findByUsuarioIdAndStatus(Long.parseLong(authentication.getName()),status);
+            return listEntities.stream().map(todo -> new todoDTO(
+                    todo.getId(),
+                    todo.getTitulo(),
+                    todo.getDescricao(),
+                    todo.getDtaValidade(),
+                    todo.getStatus())).toList();
+        }
+        if(data!=null){
+            List<todoListEntity> listEntities = repository.findByUsuarioIdAndDtaValidadeLessThanEqualOrderByDtaValidadeAsc(Long.parseLong(authentication.getName()),data);
             return listEntities.stream().map(todo -> new todoDTO(
                     todo.getId(),
                     todo.getTitulo(),

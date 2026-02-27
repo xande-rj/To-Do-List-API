@@ -4,6 +4,7 @@ import alexandreS.To_Do_List_API.Enus.StatusTodo;
 import alexandreS.To_Do_List_API.entitys.todoListEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,4 +14,6 @@ public interface todoRepository extends JpaRepository<todoListEntity,Long> {
     Optional<todoListEntity> findByIdAndUsuarioId(Long todoId, Long usuarioId);
 
     List<todoListEntity> findByUsuarioIdAndStatus(Long usuarioId,StatusTodo status);
+
+    List<todoListEntity> findByUsuarioIdAndDtaValidadeLessThanEqualOrderByDtaValidadeAsc(Long usuarioId, LocalDate Date);
 }
