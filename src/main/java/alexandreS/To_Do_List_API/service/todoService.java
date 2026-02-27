@@ -126,4 +126,8 @@ todoListEntity todo = todoBd.get();
                 todo.getStatus());
 
     }
+
+    public void deleteById(Authentication authentication, Long id) {
+          repository.deleteById(id);
+    }
 }

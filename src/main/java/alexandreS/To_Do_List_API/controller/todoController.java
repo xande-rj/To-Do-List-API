@@ -48,4 +48,9 @@ public class todoController {
         return new ResponseEntity<>(service.getById(authentication,id), HttpStatus.OK);
     }
 
+
+    @DeleteMapping("/{id}")
+    public  void deleteById(Authentication authentication,@PathVariable Long id){
+         service.deleteById(authentication,id);
+    }
 }
