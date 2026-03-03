@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -127,6 +128,35 @@ todoListEntity todo = todoBd.get();
 
     }
 
+    public  todoListEntity updateById(Authentication authentication, Long id, Map<String,Object> updates){
+        Optional<todoListEntity>  todoBd = repository.findByIdAndUsuarioId(id,Long.parseLong(authentication.getName()));
+        if(todoBd.isEmpty()){
+            throw new applicationException(
+                    "To-do nao encontrado",
+                    HttpStatus.NOT_FOUND
+            );
+        }
+        todoListEntity todo= todoBd.get();
+
+        if (updates.containsKey("titulo")) {
+            todo.setTitulo((String) updates.get("titulo"));
+        }
+        if (updates.containsKey("descricao")) {
+            todo.setDescricao((String) updates.get("descricao"));
+        }
+        if (updates.containsKey("dtaValidade")) {
+            LocalDate dateNew = LocalDate.parse((String) updates.get("dtaValidade"));
+            todo.setDtaValidade(dateNew);
+        }
+        if (updates.containsKey("status")) {
+            todo.setStatus(StatusTodo.valueOf(((String) updates.get("status"))));
+        }
+
+
+
+        return repository.save(todo);
+
+    }
     public void deleteById(Authentication authentication, Long id) {
           repository.deleteById(id);
     }

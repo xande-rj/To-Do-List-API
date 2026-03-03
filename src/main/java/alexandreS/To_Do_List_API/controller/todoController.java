@@ -13,8 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -48,7 +48,17 @@ public class todoController {
         return new ResponseEntity<>(service.getById(authentication,id), HttpStatus.OK);
     }
 
-
+    @PatchMapping("/{id}")
+    public ResponseEntity<todoDTO> updateById(Authentication authentication, @PathVariable Long id, @RequestBody Map<String,Object> update){
+         todoListEntity entity =service.updateById(authentication,id,update);
+        return new ResponseEntity<>(new todoDTO(
+                entity.getId(),
+                entity.getTitulo(),
+                entity.getDescricao(),
+                entity.getDtaValidade(),
+                entity.getStatus()
+        ), HttpStatus.CREATED);
+    }
     @DeleteMapping("/{id}")
     public  void deleteById(Authentication authentication,@PathVariable Long id){
          service.deleteById(authentication,id);
