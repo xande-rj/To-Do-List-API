@@ -14,15 +14,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class usuarioCadastroDTO {
-    @NotBlank
-    @NotNull(message = "Email obrigatório")
+
+    @NotBlank(message = "Email obrigatório")
     private  String emailUsuario;
-    @NotBlank
-    @NotNull(message = "Nome obrigatório")
+
+    @NotBlank(message = "Nome obrigatório")
     private String nomeUsuario;
 
-    @NotBlank
-    @NotNull(message = "Senha obrigatório")
+    @NotBlank(message = "Senha obrigatório")
     private String senhaUsuario;
 
     private List<todoListEntity> todoList= new ArrayList<>() ;

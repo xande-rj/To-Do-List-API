@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class usuarioLoginDTO {
-    @NotBlank
+    @NotBlank(message = "Email obrigatório")
     private  String emailUsuario;
-    @NotBlank
+    @NotBlank(message = "Senha obrigatório")
     private String senhaUsuario;
 }
