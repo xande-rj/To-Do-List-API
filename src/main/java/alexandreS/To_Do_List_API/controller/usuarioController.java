@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/usuario")
@@ -19,7 +19,7 @@ public class usuarioController {
     private  usuarioService service;
 
     @PostMapping()
-    public ResponseEntity<String> saveUsuario(@RequestBody usuarioCadastroDTO usuario){
+    public ResponseEntity<String> saveUsuario(@RequestBody @Valid usuarioCadastroDTO usuario){
         return new ResponseEntity<>(service.saveUsuario(usuario),HttpStatus.CREATED);
     }
     @PostMapping("/login")
