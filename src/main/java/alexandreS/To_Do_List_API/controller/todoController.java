@@ -60,7 +60,8 @@ public class todoController {
         ), HttpStatus.CREATED);
     }
     @DeleteMapping("/{id}")
-    public  void deleteById(Authentication authentication,@PathVariable Long id){
+    public  ResponseEntity<Void> deleteById(Authentication authentication,@PathVariable Long id){
          service.deleteById(authentication,id);
+         return  new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 }

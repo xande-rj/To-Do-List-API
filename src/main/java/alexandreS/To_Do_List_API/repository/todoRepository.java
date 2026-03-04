@@ -3,6 +3,9 @@ package alexandreS.To_Do_List_API.repository;
 import alexandreS.To_Do_List_API.Enus.StatusTodo;
 import alexandreS.To_Do_List_API.entitys.todoListEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,4 +21,8 @@ public interface todoRepository extends JpaRepository<todoListEntity,Long> {
     List<todoListEntity> findByUsuarioIdAndDtaValidadeLessThanEqualOrderByDtaValidadeAsc(Long usuarioId, LocalDate date);
 
     List<todoListEntity>findByUsuarioIdAndStatusAndDtaValidadeLessThanEqual(Long usuarioId,StatusTodo status, LocalDate date);
+
+    @Modifying
+    @Query("DELETE FROM todoListEntity t WHERE t.id = :todoId AND t.usuario.id = :usuarioId")
+    void deleteByTodoIdAndUsuarioId(@Param("todoId") Long todoId, @Param("usuarioId") Long usuarioId);
 }

@@ -7,6 +7,7 @@ import alexandreS.To_Do_List_API.entitys.usuarioEntity;
 import alexandreS.To_Do_List_API.errors.applicationException;
 import alexandreS.To_Do_List_API.repository.todoRepository;
 import alexandreS.To_Do_List_API.repository.usuarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -38,7 +39,7 @@ public class todoService {
         todoList.setTitulo(todo.getTitulo());
         todoList.setDescricao(todo.getDescricao());
         todoList.setDtaValidade(todo.getDtaValidade());
-        todoList.setStatus(todo.getStatus());
+        todoList.setStatus(StatusTodo.PENDENTE);
         todoList.setUsuario(user.get());
 
         return repository.save(todoList);
@@ -156,7 +157,11 @@ todoListEntity todo = todoBd.get();
         return repository.save(todo);
 
     }
+    @Transactional
     public void deleteById(Authentication authentication, Long id) {
-          repository.deleteById(id);
+
+          repository.deleteByTodoIdAndUsuarioId(id,Long.parseLong(authentication.getName()));
+
+
     }
 }
