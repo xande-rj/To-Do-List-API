@@ -4,13 +4,15 @@ package alexandreS.To_Do_List_API.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 @Component
 public class jwtService {
 
-    private static final String SECRET_KEY = "a-string-secret-at-least-256-bits-long";
+    @Value("${minha.chave}")
+    private String SECRET_KEY;
 
     private static final  long  TIME_MS = 10*60*1000;
 
