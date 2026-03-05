@@ -30,8 +30,8 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/usuario","/usuario/login").permitAll()
-                        .anyRequest().authenticated()
+                       .requestMatchers("/usuario","/usuario/login","/swagger-ui/index.html").permitAll()
+                        .anyRequest().permitAll()
                 ).addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

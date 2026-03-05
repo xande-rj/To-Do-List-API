@@ -28,5 +28,5 @@ public class usuarioCadastroDTO {
     @NotBlank(message = "Senha obrigatório")
     private String senhaUsuario;
 
-    private List<todoListEntity> todoList= new ArrayList<>() ;
+
 }

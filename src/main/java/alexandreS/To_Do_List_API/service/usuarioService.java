@@ -36,7 +36,7 @@ public class usuarioService {
           usuarioEntity usuarioDb = new usuarioEntity();
             usuarioDb.setEmailUsuario(usuario.getEmailUsuario());
             usuarioDb.setNomeUsuario(usuario.getNomeUsuario());
-            usuarioDb.setTodoList(usuario.getTodoList());
+
             String encryptedPassword = passwordEncoder.encode(usuario.getSenhaUsuario());
             usuarioDb.setSenhaUsuario(encryptedPassword);
 
