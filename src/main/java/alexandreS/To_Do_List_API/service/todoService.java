@@ -152,16 +152,14 @@ todoListEntity todo = todoBd.get();
             todo.setStatus(StatusTodo.valueOf(((String) updates.get("status"))));
         }
 
-
-
         return repository.save(todo);
 
     }
+
     @Transactional
     public void deleteById(Authentication authentication, Long id) {
 
           repository.deleteByTodoIdAndUsuarioId(id,Long.parseLong(authentication.getName()));
-
 
     }
 }

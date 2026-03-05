@@ -14,7 +14,7 @@ com autenticação de usuários e persistência em banco de dados.
 - **Maven**
 - **Lombok**
 - **Git**
-
+- **Spring Validation**
 ## Funcionalidades (Requisitos)
 
 ### 1. **Autenticação e Usuários**
@@ -32,3 +32,14 @@ com autenticação de usuários e persistência em banco de dados.
 - Atualizar tarefa (parcial ou total)
 - Excluir tarefa
 - Marcar tarefa como concluída (ou reabrir)
+
+### 3. **Validações**
+
+- Título obrigatório, tamanho mínimo/máximo
+- Data de vencimento futura (opcional)
+- E-mail válido no cadastro
+- Senha com tamanho mínimo
+
+### 4. **Tratamento de Erros**
+
+- Respostas padronizadas para erros (400, 401, 404, 500) com mensagens claras

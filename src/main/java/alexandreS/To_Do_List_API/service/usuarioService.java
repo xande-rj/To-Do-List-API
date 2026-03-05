@@ -48,7 +48,7 @@ public class usuarioService {
         if(!repository.existsByEmailUsuario(usuario.getEmailUsuario())){
             throw new applicationException(
                     "Email não cadastrado",
-                    HttpStatus.NOT_FOUND
+                    HttpStatus.BAD_REQUEST
             );
         }
         usuarioEntity usuariodb= repository.findByEmailUsuario(usuario.getEmailUsuario()).get();
