@@ -1,6 +1,8 @@
 package alexandreS.To_Do_List_API.service;
 
-import alexandreS.To_Do_List_API.DTO.todoDTO;
+import alexandreS.To_Do_List_API.DTOS.todoRetornoDTO;
+import alexandreS.To_Do_List_API.DTOS.todoSaveDTO;
+import alexandreS.To_Do_List_API.DTOS.todoUpdateDTO;
 import alexandreS.To_Do_List_API.Enus.StatusTodo;
 import alexandreS.To_Do_List_API.entitys.todoListEntity;
 import alexandreS.To_Do_List_API.entitys.usuarioEntity;
@@ -25,8 +27,13 @@ public class todoService {
     @Autowired
     private usuarioRepository userRepository;
 
-    public todoListEntity saveList(todoDTO todo,Authentication authentication){
-
+    public todoListEntity saveList(todoSaveDTO todo, Authentication authentication){
+if(authentication == null){
+    throw new applicationException(
+            "Token nao encontrado",
+            HttpStatus.BAD_REQUEST
+    );
+}
         Optional<usuarioEntity> user = userRepository.findById(Long.parseLong(authentication.getName()));
         if(user.isEmpty()){
             throw new applicationException(
@@ -39,13 +46,13 @@ public class todoService {
         todoList.setTitulo(todo.getTitulo());
         todoList.setDescricao(todo.getDescricao());
         todoList.setDtaValidade(todo.getDtaValidade());
-        todoList.setStatus(StatusTodo.PENDENTE);
+        todoList.setStatus(todo.getStatus()==null?StatusTodo.PENDENTE:todo.getStatus());
         todoList.setUsuario(user.get());
 
         return repository.save(todoList);
     }
 
-    public List<todoDTO> listAll(StatusTodo status, LocalDate data, Authentication authentication){
+    public List<todoRetornoDTO> listAll(StatusTodo status, LocalDate data, Authentication authentication){
 
         if(status!=null && data!=null){
             List<todoListEntity> listEntities = repository.findByUsuarioIdAndStatusAndDtaValidadeLessThanEqual(Long.parseLong(authentication.getName()),status,data);
@@ -55,7 +62,7 @@ public class todoService {
                         HttpStatus.NOT_FOUND
                 );
             }
-            return listEntities.stream().map(todo -> new todoDTO(
+            return listEntities.stream().map(todo -> new todoRetornoDTO(
                     todo.getId(),
                     todo.getTitulo(),
                     todo.getDescricao(),
@@ -70,7 +77,7 @@ public class todoService {
                         HttpStatus.NOT_FOUND
                 );
             }
-            return listEntities.stream().map(todo -> new todoDTO(
+            return listEntities.stream().map(todo -> new todoRetornoDTO(
                     todo.getId(),
                     todo.getTitulo(),
                     todo.getDescricao(),
@@ -85,7 +92,7 @@ public class todoService {
                         HttpStatus.NOT_FOUND
                 );
             }
-            return listEntities.stream().map(todo -> new todoDTO(
+            return listEntities.stream().map(todo -> new todoRetornoDTO(
                     todo.getId(),
                     todo.getTitulo(),
                     todo.getDescricao(),
@@ -101,7 +108,7 @@ public class todoService {
         }
 
 
-        return listEntities.stream().map(todo -> new todoDTO(
+        return listEntities.stream().map(todo -> new todoRetornoDTO(
                 todo.getId(),
                 todo.getTitulo(),
                 todo.getDescricao(),
@@ -109,7 +116,7 @@ public class todoService {
                 todo.getStatus())).toList();
     }
 
-    public  todoDTO getById(Authentication authentication,Long id){
+    public todoRetornoDTO getById(Authentication authentication, Long id){
        Optional<todoListEntity>  todoBd = repository.findByIdAndUsuarioId(id,Long.parseLong(authentication.getName()));
        if(todoBd.isEmpty()){
            throw new applicationException(
@@ -119,7 +126,7 @@ public class todoService {
        }
 
 todoListEntity todo = todoBd.get();
-        return new todoDTO(
+        return new todoRetornoDTO(
                 todo.getId(),
                 todo.getTitulo(),
                 todo.getDescricao(),
@@ -128,7 +135,7 @@ todoListEntity todo = todoBd.get();
 
     }
 
-    public  todoListEntity updateById(Authentication authentication, Long id, Map<String,Object> updates){
+    public  todoListEntity updateById(Authentication authentication, Long id, todoUpdateDTO updates){
         Optional<todoListEntity>  todoBd = repository.findByIdAndUsuarioId(id,Long.parseLong(authentication.getName()));
         if(todoBd.isEmpty()){
             throw new applicationException(
@@ -137,20 +144,20 @@ todoListEntity todo = todoBd.get();
             );
         }
         todoListEntity todo= todoBd.get();
+        if (updates.getTitulo() != null) {
+            todo.setTitulo(updates.getTitulo());
+        }
+        if (updates.getDescricao() != null) {
+            todo.setDescricao(updates.getDescricao());
+        }
+        if (updates.getDtaValidade() != null) {
+            todo.setDtaValidade(updates.getDtaValidade());
+        }
+        if (updates.getStatus() != null) {
+            todo.setStatus(updates.getStatus());
+        }
 
-        if (updates.containsKey("titulo")) {
-            todo.setTitulo((String) updates.get("titulo"));
-        }
-        if (updates.containsKey("descricao")) {
-            todo.setDescricao((String) updates.get("descricao"));
-        }
-        if (updates.containsKey("dtaValidade")) {
-            LocalDate dateNew = LocalDate.parse((String) updates.get("dtaValidade"));
-            todo.setDtaValidade(dateNew);
-        }
-        if (updates.containsKey("status")) {
-            todo.setStatus(StatusTodo.valueOf(((String) updates.get("status"))));
-        }
+
 
         return repository.save(todo);
 

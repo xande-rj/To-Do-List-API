@@ -43,3 +43,7 @@ com autenticação de usuários e persistência em banco de dados.
 ### 4. **Tratamento de Erros**
 
 - Respostas padronizadas para erros (400, 401, 404, 500) com mensagens claras
+
+### 5. **Documentação Interativa**
+
+- Swagger UI disponível em `/swagger-ui.html` para testar os endpoints

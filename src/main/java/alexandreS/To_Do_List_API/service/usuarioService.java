@@ -1,7 +1,8 @@
 package alexandreS.To_Do_List_API.service;
 
-import alexandreS.To_Do_List_API.DTO.usuarioCadastroDTO;
-import alexandreS.To_Do_List_API.DTO.usuarioLoginDTO;
+import alexandreS.To_Do_List_API.DTOS.usuarioCadastroDTO;
+import alexandreS.To_Do_List_API.DTOS.usuarioLoginDTO;
+import alexandreS.To_Do_List_API.DTOS.usuarioRetornoDTO;
 import alexandreS.To_Do_List_API.entitys.usuarioEntity;
 import alexandreS.To_Do_List_API.errors.applicationException;
 import alexandreS.To_Do_List_API.repository.usuarioRepository;
@@ -25,7 +26,7 @@ public class usuarioService {
     }
 
 
-    public String saveUsuario(usuarioCadastroDTO usuario){
+    public usuarioRetornoDTO saveUsuario(usuarioCadastroDTO usuario){
         if(repository.existsByEmailUsuario(usuario.getEmailUsuario())){
             throw new applicationException(
                     "Email já cadastrado",
@@ -41,10 +42,12 @@ public class usuarioService {
             usuarioDb.setSenhaUsuario(encryptedPassword);
 
             usuarioEntity entity = repository.save(usuarioDb);
-        return jwtService.gerarToken(entity.getId());
+
+        usuarioRetornoDTO token = new usuarioRetornoDTO(jwtService.gerarToken(entity.getId()));
+        return token;
     }
 
-    public String loginUsuario(usuarioLoginDTO usuario) {
+    public usuarioRetornoDTO loginUsuario(usuarioLoginDTO usuario) {
         if(!repository.existsByEmailUsuario(usuario.getEmailUsuario())){
             throw new applicationException(
                     "Email não cadastrado",
@@ -59,8 +62,9 @@ public class usuarioService {
                     HttpStatus.NOT_ACCEPTABLE
             );
         }
-        return jwtService.gerarToken(usuariodb.getId());
 
+        usuarioRetornoDTO token = new usuarioRetornoDTO(jwtService.gerarToken(usuariodb.getId()));
+        return token;
     }
 
 
