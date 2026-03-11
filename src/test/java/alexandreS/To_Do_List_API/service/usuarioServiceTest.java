@@ -27,13 +27,13 @@ import static org.mockito.Mockito.*;
 class usuarioServiceTest {
     @Mock
     private usuarioRepository repository;
+
     @Mock
     private PasswordEncoder passwordEncoder;
+
     @Mock
     private jwtService jwtService;
-
-    @Autowired
-    @InjectMocks
+@InjectMocks
     private usuarioService service;
 
     @BeforeEach
