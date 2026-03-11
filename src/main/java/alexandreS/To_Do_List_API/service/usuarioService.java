@@ -14,16 +14,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class usuarioService {
-    @Autowired
-    private usuarioRepository repository;
-
+    private final usuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final jwtService jwtService;
 
-    public  usuarioService(PasswordEncoder passwordEncoder,jwtService jwtService ){
+    // Construtor com todas as dependências
+    public usuarioService(usuarioRepository repository,
+                          PasswordEncoder passwordEncoder,
+                          jwtService jwtService) {
+        this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
+
+
 
 
     public usuarioRetornoDTO saveUsuario(usuarioCadastroDTO usuario){
@@ -37,10 +41,8 @@ public class usuarioService {
           usuarioEntity usuarioDb = new usuarioEntity();
             usuarioDb.setEmailUsuario(usuario.getEmailUsuario());
             usuarioDb.setNomeUsuario(usuario.getNomeUsuario());
-
             String encryptedPassword = passwordEncoder.encode(usuario.getSenhaUsuario());
             usuarioDb.setSenhaUsuario(encryptedPassword);
-
             usuarioEntity entity = repository.save(usuarioDb);
 
         usuarioRetornoDTO token = new usuarioRetornoDTO(jwtService.gerarToken(entity.getId()));

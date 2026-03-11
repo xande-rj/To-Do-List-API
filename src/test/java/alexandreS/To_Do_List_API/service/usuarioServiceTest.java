@@ -11,14 +11,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
+
 import java.util.Optional;
 
 
@@ -43,7 +40,7 @@ class usuarioServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new usuarioService(repository, passwordEncoder, jwtService);
+        this.service = new usuarioService(repository, passwordEncoder, jwtService);
     }
 
     @Test
