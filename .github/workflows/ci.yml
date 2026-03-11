@@ -14,10 +14,10 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Configurar JDK 17 (ou a versão do seu projeto)
+      - name: Configurar JDK 25 (ou a versão do seu projeto)
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '25'
           distribution: 'temurin'
           cache: maven  # opcional, acelera o build
 
