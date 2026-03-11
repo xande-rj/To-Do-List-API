@@ -10,9 +10,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -21,10 +23,13 @@ import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class usuarioServiceTest {
+
     @Mock
     private usuarioRepository repository;
 
@@ -33,28 +38,25 @@ class usuarioServiceTest {
 
     @Mock
     private jwtService jwtService;
-@InjectMocks
+
     private usuarioService service;
 
     @BeforeEach
-    void setup(){
-        MockitoAnnotations.openMocks(this);
+    void setUp() {
+        service = new usuarioService(repository, passwordEncoder, jwtService);
     }
 
     @Test
     @DisplayName("Deve retorna um erro pois o usuario ja existe nao banco")
     void saveUsuarioFail() {
-        usuarioEntity data = new usuarioEntity(1L,"teste@gmail.com","testenome","senha123",new ArrayList<>());
-        when(repository.save(data)).thenReturn(data);
-        when(repository.existsByEmailUsuario(data.getEmailUsuario())).thenReturn(true);
-        usuarioCadastroDTO userDTO = new usuarioCadastroDTO("teste@gmail.com","testenome","senha123");
-        applicationException exception = Assertions.assertThrows(applicationException.class,()->{
-            service.saveUsuario(userDTO);
-        });
+        usuarioCadastroDTO dto = new usuarioCadastroDTO("teste@gmail.com", "nome", "senha123");
+        when(repository.existsByEmailUsuario(dto.getEmailUsuario())).thenReturn(true);
 
-        Assertions.assertEquals("Email já cadastrado",exception.getMessage());
+        assertThatThrownBy(() -> service.saveUsuario(dto))
+                .isInstanceOf(applicationException.class)
+                .hasMessageContaining("Email já cadastrado");
 
-        verify(passwordEncoder, never()).encode(any());
+        verify(repository).existsByEmailUsuario(dto.getEmailUsuario());
     }
 
 
@@ -63,8 +65,8 @@ class usuarioServiceTest {
     void saveUsuarioSucesses() {
         usuarioCadastroDTO userDTO = new usuarioCadastroDTO("teste@gmail.com","testenome","senha123");
 
-        when(repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(false);
-        when(passwordEncoder.encode(userDTO.getSenhaUsuario())).thenReturn("senhaCodificada");
+        when(this.repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(false);
+        when(this.passwordEncoder.encode(userDTO.getSenhaUsuario())).thenReturn("senhaCodificada");
 
         usuarioEntity entidadeSalva = new usuarioEntity();
         entidadeSalva.setId(1L);
@@ -72,16 +74,16 @@ class usuarioServiceTest {
         entidadeSalva.setNomeUsuario(userDTO.getNomeUsuario());
         entidadeSalva.setSenhaUsuario("senhaCodificada");
 
-        when(repository.save(any(usuarioEntity.class))).thenReturn(entidadeSalva);
-        when(jwtService.gerarToken(1L)).thenReturn("tokenJWT");
+        when(this.repository.save(any(usuarioEntity.class))).thenReturn(entidadeSalva);
+        when(this.jwtService.gerarToken(1L)).thenReturn("tokenJWT");
 
-        usuarioRetornoDTO resultado = service.saveUsuario(userDTO);
+        usuarioRetornoDTO resultado = this.service.saveUsuario(userDTO);
 
         assertThat(resultado).isNotNull();
         assertThat(resultado.getToken()).isEqualTo("tokenJWT");
 
-        verify(repository).existsByEmailUsuario(userDTO.getEmailUsuario());
-        verify(passwordEncoder).encode(userDTO.getSenhaUsuario());
+        verify(this.repository).existsByEmailUsuario(userDTO.getEmailUsuario());
+        verify(this.passwordEncoder).encode(userDTO.getSenhaUsuario());
 
     }
 
@@ -90,26 +92,26 @@ class usuarioServiceTest {
     void loginUsuarioSucesses() {
         usuarioLoginDTO userDTO = new usuarioLoginDTO("teste@gmail.com","senha123");
 
-        when(repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(true);
+        when(this.repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(true);
 
         usuarioEntity entidadeSalva = new usuarioEntity();
         entidadeSalva.setId(1L);
         entidadeSalva.setEmailUsuario(userDTO.getEmailUsuario());
         entidadeSalva.setSenhaUsuario("senhaCodificada");
 
-        when(repository.findByEmailUsuario(entidadeSalva.getEmailUsuario())).thenReturn(Optional.of(entidadeSalva));
-        when(passwordEncoder.matches(userDTO.getSenhaUsuario(),entidadeSalva.getSenhaUsuario())).thenReturn(true);
+        when(this.repository.findByEmailUsuario(entidadeSalva.getEmailUsuario())).thenReturn(Optional.of(entidadeSalva));
+        when(this.passwordEncoder.matches(userDTO.getSenhaUsuario(),entidadeSalva.getSenhaUsuario())).thenReturn(true);
 
-        when(jwtService.gerarToken(1L)).thenReturn("tokenJWT");
+        when(this.jwtService.gerarToken(1L)).thenReturn("tokenJWT");
 
-        usuarioRetornoDTO resultado = service.loginUsuario(userDTO);
+        usuarioRetornoDTO resultado = this.service.loginUsuario(userDTO);
 
         assertThat(resultado).isNotNull();
         assertThat(resultado.getToken()).isEqualTo("tokenJWT");
 
-        verify(repository).findByEmailUsuario(userDTO.getEmailUsuario());
-        verify(passwordEncoder).matches(userDTO.getSenhaUsuario(),entidadeSalva.getSenhaUsuario());
-        verify(jwtService).gerarToken(1L);
+        verify(this.repository).findByEmailUsuario(userDTO.getEmailUsuario());
+        verify(this.passwordEncoder).matches(userDTO.getSenhaUsuario(),entidadeSalva.getSenhaUsuario());
+        verify(this.jwtService).gerarToken(1L);
     }
 
     @Test
@@ -117,17 +119,17 @@ class usuarioServiceTest {
     void loginUsuarioFail() {
         usuarioLoginDTO userDTO = new usuarioLoginDTO("teste@gmail.com","senha123");
 
-        when(repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(false);
+        when(this.repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(false);
 
 
         applicationException exception = Assertions.assertThrows(applicationException.class,()->{
-            service.loginUsuario(userDTO);
+            this.service.loginUsuario(userDTO);
         });
 
         Assertions.assertEquals("Email não cadastrado",exception.getMessage());
 
-        verify(passwordEncoder, never()).encode(any());
-        verify(repository, never()).findByEmailUsuario(any());
+        verify(this.passwordEncoder, never()).encode(any());
+        verify(this.repository, never()).findByEmailUsuario(any());
 
     }
 
@@ -136,25 +138,25 @@ class usuarioServiceTest {
     void loginUsuarioFailCase02() {
         usuarioLoginDTO userDTO = new usuarioLoginDTO("teste@gmail.com","senha123");
 
-        when(repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(true);
+        when(this.repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(true);
 
         usuarioEntity entidadeSalva = new usuarioEntity();
         entidadeSalva.setId(1L);
         entidadeSalva.setEmailUsuario(userDTO.getEmailUsuario());
         entidadeSalva.setSenhaUsuario("senhaCodificada");
 
-        when(repository.findByEmailUsuario(entidadeSalva.getEmailUsuario())).thenReturn(Optional.of(entidadeSalva));
-        when(passwordEncoder.matches(userDTO.getSenhaUsuario(),entidadeSalva.getSenhaUsuario())).thenReturn(false);
+        when(this.repository.findByEmailUsuario(entidadeSalva.getEmailUsuario())).thenReturn(Optional.of(entidadeSalva));
+        when(this.passwordEncoder.matches(userDTO.getSenhaUsuario(),entidadeSalva.getSenhaUsuario())).thenReturn(false);
 
 
         applicationException exception = Assertions.assertThrows(applicationException.class,()->{
-            service.loginUsuario(userDTO);
+            this.service.loginUsuario(userDTO);
         });
 
         Assertions.assertEquals("Senha incorreta",exception.getMessage());
 
 
-        verify(jwtService, never()).gerarToken(any());
+        verify(this.jwtService, never()).gerarToken(any());
 
     }
 }

@@ -22,6 +22,8 @@ jobs:
           cache: maven  # opcional, acelera o build
 
       - name: Rodar testes com Maven
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: mvn clean test
 
       - name: Upload de relatórios de teste (opcional)
