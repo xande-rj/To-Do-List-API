@@ -24,7 +24,7 @@ class usuarioRepositoryTest {
 
     @Test
     @DisplayName("Usario ja existe no banco de dados retorna TRUE")
-    void existsByEmailUsuarioSuccesses() {
+    void existsByEmailUsuarioCase01() {
         usuarioCadastroDTO data = new usuarioCadastroDTO("teste@gmail.com","nomeTeste","testeSenha123");
         this.createUser(data);
 boolean result = this.repository.existsByEmailUsuario(data.getEmailUsuario());
@@ -35,7 +35,7 @@ assertThat(result).isTrue();
 
     @Test
     @DisplayName("Usario nao existe no banco de dados retorna FALSE")
-    void existsByEmailUsuarioFail() {
+    void existsByEmailUsuarioCase02() {
         usuarioCadastroDTO data = new usuarioCadastroDTO("teste@gmail.com","nomeTeste","testeSenha123");
 
         boolean result = this.repository.existsByEmailUsuario(data.getEmailUsuario());
@@ -46,7 +46,7 @@ assertThat(result).isTrue();
 
     @Test
     @DisplayName("Usuario no banco existe")
-    void findByEmailUsuarioSucesses() {
+    void findByEmailUsuarioCase01() {
         usuarioCadastroDTO data = new usuarioCadastroDTO("teste@gmail.com","nomeTeste","testeSenha123");
         this.createUser(data);
         Optional<usuarioEntity> result = this.repository.findByEmailUsuario(data.getEmailUsuario());
@@ -57,7 +57,7 @@ assertThat(result).isTrue();
 
     @Test
     @DisplayName("Usuario nao banco nao existe")
-    void findByEmailUsuarioFail() {
+    void findByEmailUsuarioCase02() {
         usuarioCadastroDTO data = new usuarioCadastroDTO("teste@gmail.com","nomeTeste","testeSenha123");
 
         Optional<usuarioEntity> result = this.repository.findByEmailUsuario(data.getEmailUsuario());

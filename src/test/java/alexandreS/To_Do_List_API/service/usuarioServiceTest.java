@@ -45,7 +45,7 @@ class usuarioServiceTest {
 
     @Test
     @DisplayName("Deve retorna um erro pois o usuario ja existe nao banco")
-    void saveUsuarioFail() {
+    void saveUsuarioCase01() {
         usuarioCadastroDTO dto = new usuarioCadastroDTO("teste@gmail.com", "nome", "senha123");
         when(repository.existsByEmailUsuario(dto.getEmailUsuario())).thenReturn(true);
 
@@ -59,7 +59,7 @@ class usuarioServiceTest {
 
     @Test
     @DisplayName("Deve criar um usuario no banco de dados sem problema e retornar token")
-    void saveUsuarioSucesses() {
+    void saveUsuarioCase02() {
         usuarioCadastroDTO userDTO = new usuarioCadastroDTO("teste@gmail.com","testenome","senha123");
 
         when(this.repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(false);
@@ -86,7 +86,7 @@ class usuarioServiceTest {
 
     @Test
     @DisplayName("Deve retornar token sem problemas")
-    void loginUsuarioSucesses() {
+    void loginUsuarioCase01() {
         usuarioLoginDTO userDTO = new usuarioLoginDTO("teste@gmail.com","senha123");
 
         when(this.repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(true);
@@ -113,7 +113,7 @@ class usuarioServiceTest {
 
     @Test
     @DisplayName("Deve retornar erro pois o email nao existe")
-    void loginUsuarioFail() {
+    void loginUsuarioCase02() {
         usuarioLoginDTO userDTO = new usuarioLoginDTO("teste@gmail.com","senha123");
 
         when(this.repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(false);
@@ -132,7 +132,7 @@ class usuarioServiceTest {
 
     @Test
     @DisplayName("Deve retornar erro pois a senha esta errada")
-    void loginUsuarioFailCase02() {
+    void loginUsuarioCase03() {
         usuarioLoginDTO userDTO = new usuarioLoginDTO("teste@gmail.com","senha123");
 
         when(this.repository.existsByEmailUsuario(userDTO.getEmailUsuario())).thenReturn(true);
