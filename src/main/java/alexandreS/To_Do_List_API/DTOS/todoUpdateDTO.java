@@ -3,7 +3,9 @@ import alexandreS.To_Do_List_API.Enus.StatusTodo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.FutureOrPresent;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Schema(description = "Dados para atualização parcial de uma tarefa")
+@NoArgsConstructor
+@AllArgsConstructor
 public class todoUpdateDTO {
 
     @Schema(description = "Novo título da tarefa", example = "Comprar pão")

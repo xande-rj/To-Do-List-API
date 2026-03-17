@@ -22,20 +22,25 @@ import java.util.Optional;
 
 @Service
 public class todoService {
-    @Autowired
-    private todoRepository repository;
-    @Autowired
-    private usuarioRepository userRepository;
 
-    public todoListEntity saveList(todoSaveDTO todo, Authentication authentication){
-if(authentication == null){
-    throw new applicationException(
-            "Token nao encontrado",
-            HttpStatus.BAD_REQUEST
-    );
-}
+    private final todoRepository repository;
+
+    private final usuarioRepository userRepository;
+
+    public  todoService( todoRepository repository, usuarioRepository userRepository){
+        this.repository= repository;
+        this.userRepository = userRepository;
+    }
+
+    public todoListEntity saveList(todoSaveDTO todo, Authentication authentication) {
+        if (authentication == null) {
+            throw new applicationException(
+                    "Token nao encontrado",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
         Optional<usuarioEntity> user = userRepository.findById(Long.parseLong(authentication.getName()));
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new applicationException(
                     "Usuario nao encontrado",
                     HttpStatus.NOT_FOUND
@@ -46,17 +51,17 @@ if(authentication == null){
         todoList.setTitulo(todo.getTitulo());
         todoList.setDescricao(todo.getDescricao());
         todoList.setDtaValidade(todo.getDtaValidade());
-        todoList.setStatus(todo.getStatus()==null?StatusTodo.PENDENTE:todo.getStatus());
+        todoList.setStatus(todo.getStatus() == null ? StatusTodo.PENDENTE : todo.getStatus());
         todoList.setUsuario(user.get());
 
         return repository.save(todoList);
     }
 
-    public List<todoRetornoDTO> listAll(StatusTodo status, LocalDate data, Authentication authentication){
+    public List<todoRetornoDTO> listAll(StatusTodo status, LocalDate data, Authentication authentication) {
 
-        if(status!=null && data!=null){
-            List<todoListEntity> listEntities = repository.findByUsuarioIdAndStatusAndDtaValidadeLessThanEqual(Long.parseLong(authentication.getName()),status,data);
-            if(listEntities.isEmpty()){
+        if (status != null && data != null) {
+            List<todoListEntity> listEntities = repository.findByUsuarioIdAndStatusAndDtaValidadeLessThanEqual(Long.parseLong(authentication.getName()), status, data);
+            if (listEntities.isEmpty()) {
                 throw new applicationException(
                         "Lista de To-do vazia",
                         HttpStatus.NOT_FOUND
@@ -69,9 +74,9 @@ if(authentication == null){
                     todo.getDtaValidade(),
                     todo.getStatus())).toList();
         }
-        if(status !=null){
-            List<todoListEntity> listEntities = repository.findByUsuarioIdAndStatus(Long.parseLong(authentication.getName()),status);
-            if(listEntities.isEmpty()){
+        if (status != null) {
+            List<todoListEntity> listEntities = repository.findByUsuarioIdAndStatus(Long.parseLong(authentication.getName()), status);
+            if (listEntities.isEmpty()) {
                 throw new applicationException(
                         "Lista de To-do vazia",
                         HttpStatus.NOT_FOUND
@@ -84,9 +89,9 @@ if(authentication == null){
                     todo.getDtaValidade(),
                     todo.getStatus())).toList();
         }
-        if(data!=null){
-            List<todoListEntity> listEntities = repository.findByUsuarioIdAndDtaValidadeLessThanEqualOrderByDtaValidadeAsc(Long.parseLong(authentication.getName()),data);
-            if(listEntities.isEmpty()){
+        if (data != null) {
+            List<todoListEntity> listEntities = repository.findByUsuarioIdAndDtaValidadeLessThanEqualOrderByDtaValidadeAsc(Long.parseLong(authentication.getName()), data);
+            if (listEntities.isEmpty()) {
                 throw new applicationException(
                         "Lista de To-do vazia",
                         HttpStatus.NOT_FOUND
@@ -100,7 +105,7 @@ if(authentication == null){
                     todo.getStatus())).toList();
         }
         List<todoListEntity> listEntities = repository.findByUsuarioId(Long.parseLong(authentication.getName()));
-        if(listEntities.isEmpty()){
+        if (listEntities.isEmpty()) {
             throw new applicationException(
                     "Lista de To-do vazia",
                     HttpStatus.NOT_FOUND
@@ -116,16 +121,16 @@ if(authentication == null){
                 todo.getStatus())).toList();
     }
 
-    public todoRetornoDTO getById(Authentication authentication, Long id){
-       Optional<todoListEntity>  todoBd = repository.findByIdAndUsuarioId(id,Long.parseLong(authentication.getName()));
-       if(todoBd.isEmpty()){
-           throw new applicationException(
-                   "To-do nao encontrado",
-                   HttpStatus.NOT_FOUND
-           );
-       }
+    public todoRetornoDTO getById(Authentication authentication, Long id) {
+        Optional<todoListEntity> todoBd = repository.findByIdAndUsuarioId(id, Long.parseLong(authentication.getName()));
+        if (todoBd.isEmpty()) {
+            throw new applicationException(
+                    "To-do nao encontrado",
+                    HttpStatus.NOT_FOUND
+            );
+        }
 
-todoListEntity todo = todoBd.get();
+        todoListEntity todo = todoBd.get();
         return new todoRetornoDTO(
                 todo.getId(),
                 todo.getTitulo(),
@@ -135,15 +140,15 @@ todoListEntity todo = todoBd.get();
 
     }
 
-    public  todoListEntity updateById(Authentication authentication, Long id, todoUpdateDTO updates){
-        Optional<todoListEntity>  todoBd = repository.findByIdAndUsuarioId(id,Long.parseLong(authentication.getName()));
-        if(todoBd.isEmpty()){
+    public todoListEntity updateById(Authentication authentication, Long id, todoUpdateDTO updates) {
+        Optional<todoListEntity> todoBd = repository.findByIdAndUsuarioId(id, Long.parseLong(authentication.getName()));
+        if (todoBd.isEmpty()) {
             throw new applicationException(
                     "To-do nao encontrado",
                     HttpStatus.NOT_FOUND
             );
         }
-        todoListEntity todo= todoBd.get();
+        todoListEntity todo = todoBd.get();
         if (updates.getTitulo() != null) {
             todo.setTitulo(updates.getTitulo());
         }
@@ -158,7 +163,6 @@ todoListEntity todo = todoBd.get();
         }
 
 
-
         return repository.save(todo);
 
     }
@@ -166,7 +170,7 @@ todoListEntity todo = todoBd.get();
     @Transactional
     public void deleteById(Authentication authentication, Long id) {
 
-          repository.deleteByTodoIdAndUsuarioId(id,Long.parseLong(authentication.getName()));
+        repository.deleteByTodoIdAndUsuarioId(id, Long.parseLong(authentication.getName()));
 
     }
 }
